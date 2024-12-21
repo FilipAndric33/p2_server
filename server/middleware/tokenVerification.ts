@@ -4,23 +4,26 @@ import jwt from 'jsonwebtoken';
 
 dotenv.config({ path: '.env' });
 
-interface JwtPayload {
-  id: number;
-}
+export function verifyToken(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
+  const accessToken = req.cookies.accessToken;
 
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-
-  if (!token) {
-    return res.status(401).json({ message: 'No authorization.' });
+  if (!accessToken) {
+    res.status(401).json({ message: 'No authorization.' });
+    return;
   }
 
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-
+    req.user = jwt.verify(accessToken, process.env.JWT_SECRET!) as {
+      id: number;
+    };
     next();
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: 'Internal server error.' });
+    res.status(500).json({ message: 'Internal server error.' });
+    return;
   }
 }

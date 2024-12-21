@@ -2,6 +2,9 @@ import { registerUser, authenticateUser } from '../utils';
 import { Request, Response } from 'express';
 import { controller } from './decorators/controller';
 import { post } from '../routes/routeBinder';
+import { findUserByMail } from '../utils/findUserByMail';
+import { setAuthCookies } from '../utils/setAuthCookies';
+import { matchPassword } from '../config/bcryptConfig';
 
 @controller('')
 export class RootController {
@@ -30,10 +33,19 @@ export class RootController {
   async postLogin(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
 
+    console.log(email, password);
     try {
-      const result = await authenticateUser(email, password);
+      const user = await findUserByMail(email);
+      if (!user) {
+        res.status(404).json({ message: 'invalid credentials' });
+      }
+
+      console.log(user);
+
+      const result = await matchPassword(password, user!.password);
 
       if (result) {
+        setAuthCookies(res, user!.id);
         res.status(200).json({ message: 'User login successful.' });
       } else {
         res.status(400).json({ message: 'Wrong credentials.' });
