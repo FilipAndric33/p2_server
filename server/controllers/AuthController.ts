@@ -4,6 +4,8 @@ import { verifyToken } from '../middleware/tokenVerification';
 import { use } from './decorators/use';
 import { put, get } from '../routes/routeBinder';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
 
 interface CustomRequest extends Request {
   user?: { id: number };
@@ -17,44 +19,32 @@ export class AuthController {
 
   @get('/refresh')
   async refreshToken(req: Request, res: Response) {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshKey = fs.readFileSync(
+      path.resolve(__dirname, '../refresh_public.key'),
+    );
+    const accessKey = fs.readFileSync(
+      path.resolve(__dirname, '../access_private.key'),
+    );
+    const authHeader = req.headers.authorization;
+    const refreshToken = authHeader && authHeader.split(' ')[1];
 
     if (!refreshToken) {
       return res.status(401).json({ message: 'invalid refresh token' });
     }
     try {
-      const decoded = jwt.verify(
-        refreshToken,
-        process.env.JWT_SECRET_REFRESH!,
-      ) as {
+      const decoded = jwt.verify(refreshToken, refreshKey) as {
         id: number;
       };
       req.user = { id: decoded.id };
 
-      const accessToken = jwt.sign(
-        { id: req.user.id },
-        process.env.JWT_SECRET!,
-        {
-          expiresIn: '30m',
-        },
-      );
-
-      res.cookie('accessToken', accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 30 * 60 * 1000,
+      const accessToken = jwt.sign({ id: req.user.id }, accessKey, {
+        algorithm: 'RS256',
+        expiresIn: '15m',
       });
+      res.status(200).json({ message: 'Token refreshed successfully.' });
     } catch (error) {
       console.log(error);
       res.status(403).json({ message: 'Invalid or expired token.' });
     }
-  }
-
-  @get('/logout')
-  async logout(res: Response) {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-    res.status(200).json({ message: 'Logged out successfully.' });
   }
 }

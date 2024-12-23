@@ -1,4 +1,10 @@
 /server/node_modules
+/server/cert.pem
+/server/key.pem
+/server/access_private.key
+/server/access_public.key
+/server/refresh_private.key
+/server/refresh_public.key
 /.pnp
 .pnp.js
 .idea
