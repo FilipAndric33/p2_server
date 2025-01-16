@@ -1,13 +1,13 @@
 import pool from '../postgres/poolSetup';
 import { QueryResult } from 'pg';
-import { UserInterface } from '../interfaces/userInterface';
+import { userInterface } from '../interfaces';
 
-export async function findUserByMail(email: string): Promise<UserInterface | undefined>  {
+export async function findUserByMail(
+  email: string,
+): Promise<userInterface | undefined> {
   const query = `SELECT * FROM "users" WHERE email=$1`;
 
-  const { rows }: QueryResult<UserInterface> = await pool.query(query, [
-    email,
-  ]);
+  const { rows }: QueryResult<userInterface> = await pool.query(query, [email]);
   if (rows.length === 0) {
     return;
   }

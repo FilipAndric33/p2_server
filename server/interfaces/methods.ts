@@ -1,4 +1,4 @@
-export enum Methods {
+export enum methods {
   get = 'get',
   post = 'post',
   del = 'delete',

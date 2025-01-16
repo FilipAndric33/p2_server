@@ -10,7 +10,7 @@ export const userRegisterService = async (
     return res.status(400).json({ message: 'all of the fields are required.' });
   }
 
-  if (await registerUser({ username, email, password }, res)) {
+  if (await registerUser(username, email, password)) {
     return res.status(200).json({ message: 'User registered successfully.' });
   }
 };

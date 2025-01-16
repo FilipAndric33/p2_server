@@ -4,8 +4,9 @@ import { createTables } from './postgres/tableCreation';
 import fs from 'fs';
 import https from 'https';
 import path from 'path';
-import './controllers/RootController';
 import './controllers/AuthController';
+import './controllers/ContentController';
+import './controllers/TokenController';
 import { AppRouter } from './routes/AppRouter';
 
 createTables();
