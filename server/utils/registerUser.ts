@@ -3,8 +3,8 @@ import { hashPassword } from '../config/bcryptConfig';
 
 export async function registerUser(
   username: string,
-  password: string,
   email: string,
+  password: string,
 ) {
   const hashedPass = await hashPassword(password);
 
