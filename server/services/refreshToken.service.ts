@@ -29,6 +29,7 @@ export const refreshTokenService = (req: Request, res: Response) => {
     return res.status(200).json({
       message: 'Token refreshed successfully.',
       accessToken: accessToken,
+      refreshToken: refreshToken,
     });
   } catch (err) {
     console.log(err);

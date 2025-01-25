@@ -29,7 +29,7 @@ export function verifyToken(
     next();
   } catch (error) {
     if ((error as jwt.JsonWebTokenError).name === 'TokenExpiredError') {
-      res.status(401).json({ message: 'Token has expired.' });
+      res.status(401).json({ error: 'Token has expired.' });
       return;
     }
     console.log(error);
