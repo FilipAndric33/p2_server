@@ -19,9 +19,9 @@ export const fetchUsernameService = async (
     if (rows.length === 0) {
       return undefined;
     }
-    res.status(200).json({ username: rows[0].id });
+    return res.status(200).json({ username: rows[0].username });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: 'Internal server error. ' });
+    return res.status(500).json({ message: 'Internal server error. ' });
   }
 };
