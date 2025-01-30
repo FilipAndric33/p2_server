@@ -1,11 +1,11 @@
 import { controller } from './decorators';
 import { Request, Response } from 'express';
-import { get } from '../routes/routeBinder';
+import { post } from '../routes/routeBinder';
 import { refreshTokenService } from '../services';
 
 @controller('/token')
 export class TokenController {
-  @get('/refresh')
+  @post('/refresh')
   async refreshToken(req: Request, res: Response) {
     try {
       refreshTokenService(req, res);
