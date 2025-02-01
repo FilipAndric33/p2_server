@@ -7,7 +7,6 @@ import path from 'path';
 import './controllers/TokenController';
 import './controllers/ContentController';
 import './controllers/AuthController';
-import './controllers/UserController';
 import { AppRouter } from './routes/AppRouter';
 
 createTables();

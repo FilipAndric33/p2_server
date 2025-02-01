@@ -3,7 +3,12 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
 
-export function setAuthTokens(res: Response, id: number) {
+export function setAuthTokens(
+  res: Response,
+  id: number,
+  username: string,
+  email: string,
+) {
   const accessKey = fs.readFileSync(
     path.resolve(__dirname, '../access_private.key'),
   );
@@ -25,5 +30,8 @@ export function setAuthTokens(res: Response, id: number) {
     message: 'User login successful.',
     accessToken: accessToken,
     refreshToken: refreshToken,
+    id: id,
+    username: username,
+    email: email,
   });
 }
