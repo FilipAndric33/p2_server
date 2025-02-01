@@ -2,7 +2,7 @@ import pool from '../postgres/poolSetup';
 import { QueryResult } from 'pg';
 import { userInterface } from '../interfaces';
 
-export async function findUserByMail(
+export async function findUserByEmailService(
   email: string,
 ): Promise<userInterface | undefined> {
   const query = `SELECT * FROM "users" WHERE email=$1`;

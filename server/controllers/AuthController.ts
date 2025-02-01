@@ -20,6 +20,7 @@ export class AuthController {
   @post('/login')
   async userLogin(req: Request, res: Response) {
     const { email, password } = req.body;
+    console.log(email, password);
     try {
       await userLoginService({ email, password }, res);
     } catch (error) {
